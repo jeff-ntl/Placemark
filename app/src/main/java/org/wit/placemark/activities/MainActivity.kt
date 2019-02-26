@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -18,6 +19,7 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
     var placemark = PlacemarkModel()
     lateinit var app : MainApp
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -27,6 +29,8 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
             placemark = intent.extras.getParcelable<PlacemarkModel>("placemark_edit")
             placemarkTitle.setText(placemark.title)
             description.setText(placemark.description)
+            val btnPlacemark= findViewById<Button>(R.id.btnAdd)
+            btnPlacemark.setText(R.string.button_savePlaceMark)
         }
 
         btnAdd.setOnClickListener() {

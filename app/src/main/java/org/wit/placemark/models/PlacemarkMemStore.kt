@@ -12,6 +12,8 @@ internal fun getId(): Long {
 
 class PlacemarkMemStore : PlacemarkStore,AnkoLogger {
 
+
+
     val placemarks = ArrayList<PlacemarkModel>()
 
     override fun findAll(): List<PlacemarkModel> {

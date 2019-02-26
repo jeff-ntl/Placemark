@@ -6,4 +6,5 @@
     <string name="menu_addPlacemark">Add</string>
     <string name="menu_cancelPlacemark">Cancel</string>
     <string name="toast_message">Please Enter a title</string>
+    <string name="button_savePlaceMark">Save Placement</string>
 </resources>
