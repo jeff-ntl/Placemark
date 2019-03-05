@@ -1,7 +1,9 @@
 package org.wit.placemark.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -10,6 +12,9 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.toast
 import org.wit.placemark.R
+import org.wit.placemark.helpers.readImage
+import org.wit.placemark.helpers.readImageFromPath
+import org.wit.placemark.helpers.showImagePicker
 import org.wit.placemark.main.MainApp
 import org.wit.placemark.models.PlacemarkModel
 
@@ -17,8 +22,10 @@ import org.wit.placemark.models.PlacemarkModel
 class MainActivity : AppCompatActivity(), AnkoLogger {
 
     var placemark = PlacemarkModel()
-    lateinit var app : MainApp
-
+    lateinit var app: MainApp
+    var edit = false
+    //for image picker function
+    val IMAGE_REQUEST = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,33 +33,48 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
         app = application as MainApp
 
         if (intent.hasExtra("placemark_edit")) {
+            edit = true
             placemark = intent.extras.getParcelable<PlacemarkModel>("placemark_edit")
             placemarkTitle.setText(placemark.title)
             description.setText(placemark.description)
-            val btnPlacemark= findViewById<Button>(R.id.btnAdd)
-            btnPlacemark.setText(R.string.button_savePlaceMark)
+            btnAdd.setText(R.string.button_savePlaceMark)
+            chooseImage.setText(R.string.button_changeImage)
+            placemarkImage.setImageBitmap(readImageFromPath(this, placemark.image))
         }
 
-        btnAdd.setOnClickListener() {
+        btnAdd.setOnClickListener {
             placemark.title = placemarkTitle.text.toString()
             placemark.description = description.text.toString()
             if (placemark.title.isNotEmpty()) {
                 //app.placemarks.add(placemark.copy())
-                app.placemarks.create(placemark.copy())
-                info("add Button Pressed: $placemarkTitle")
+
+
+                //exercise 3 solution
+
+                if (edit) {
+                    info("checkString works!")
+                    app.placemarks.update(placemark.copy())
+                } else {
+                    app.placemarks.create(placemark.copy())
+                }
+
                 //app.placemarks.forEach { info("add Button Pressed: ${it}")}
                 //app.placemarks.findAll().forEach { info("add Button Pressed: ${it}")}
+                info("add Button Pressed: $placemarkTitle")
                 setResult(AppCompatActivity.RESULT_OK)
                 finish()
-            }
-            else {
-                toast (getString(R.string.toast_message))
+            } else {
+                toast(getString(R.string.toast_message))
             }
         }
         //Add action bar and set title
         toolbarAdd.title = title
         setSupportActionBar(toolbarAdd)
 
+        chooseImage.setOnClickListener {
+            info("Select image")
+            showImagePicker(this, IMAGE_REQUEST)
+        }
 
     }
 
@@ -70,5 +92,16 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            IMAGE_REQUEST -> {
+                if (data != null) {
+                    placemark.image = data.getData().toString()
+                    placemarkImage.setImageBitmap(readImage(this, resultCode, data))
+                }
+            }
+        }
 
+    }
 }
