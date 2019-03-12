@@ -16,7 +16,7 @@ class PlacemarkMemStore : PlacemarkStore,AnkoLogger {
 
     val placemarks = ArrayList<PlacemarkModel>()
 
-    override fun findAll(): List<PlacemarkModel> {
+    override fun findAll(): ArrayList<PlacemarkModel> {
         return placemarks
     }
 
@@ -31,6 +31,7 @@ class PlacemarkMemStore : PlacemarkStore,AnkoLogger {
         if (foundPlacemark != null) {
             foundPlacemark.title = placemark.title
             foundPlacemark.description = placemark.description
+            foundPlacemark.image = placemark.image
             logAll()
         }
     }

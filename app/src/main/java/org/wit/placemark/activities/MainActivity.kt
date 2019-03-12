@@ -38,8 +38,10 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
             placemarkTitle.setText(placemark.title)
             description.setText(placemark.description)
             btnAdd.setText(R.string.button_savePlaceMark)
-            chooseImage.setText(R.string.button_changeImage)
             placemarkImage.setImageBitmap(readImageFromPath(this, placemark.image))
+            if (placemark.image != null) {
+                chooseImage.setText(R.string.button_changeImage)
+            }
         }
 
         btnAdd.setOnClickListener {
@@ -98,7 +100,8 @@ class MainActivity : AppCompatActivity(), AnkoLogger {
             IMAGE_REQUEST -> {
                 if (data != null) {
                     placemark.image = data.getData().toString()
-                    placemarkImage.setImageBitmap(readImage(this, resultCode, data))
+                    placemarkImage.setImageBitmap(readImage(this,resultCode,data))
+                    chooseImage.setText(R.string.button_changeImage)
                 }
             }
         }
